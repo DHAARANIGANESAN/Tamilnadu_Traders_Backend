@@ -2,6 +2,7 @@ import path from 'path';
 import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+import cors from 'cors'; // ✅ Added CORS import
 import connectDB from './config/db.js';
 import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
@@ -17,6 +18,16 @@ const app = express();
 
 // Connect to the database
 connectDB();
+
+// ✅ Configure CORS
+const allowedOrigins = [
+  'https://tamilnadu-trader.onrender.com', // your frontend domain on Render
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true, // if using cookies or authentication headers
+}));
 
 // Middleware
 app.use(express.json());
@@ -42,15 +53,12 @@ app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
-  // Serve the frontend's build folder
   app.use(express.static(path.join(__dirname, '/frontend/build')));
 
-  // Catch-all route to serve the React app for any unknown routes
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
   });
 } else {
-  // Development route
   app.get('/', (req, res) => {
     res.send('API is running....');
   });
