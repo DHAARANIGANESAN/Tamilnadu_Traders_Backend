@@ -21,7 +21,9 @@ connectDB();
 
 // ✅ Configure CORS
 const allowedOrigins = [
-  'https://tamilnadu-trader.onrender.com', // your frontend domain on Render
+  'https://tamilnadu-trader.onrender.com',
+   'http://localhost:3000'
+ // your frontend domain on Render
 ];
 
 app.use(cors({
